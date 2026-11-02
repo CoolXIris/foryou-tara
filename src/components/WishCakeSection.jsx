@@ -47,7 +47,7 @@ export default function WishCakeSection({ onScrollToFinale }) {
           </h2>
 
           <p className="text-neutral-300 text-sm sm:text-base font-light">
-            Tutup matamu sejenak, bayangkan impian terbesarmu di tahun ini, lalu ketuk lilinnya.
+            Tutup matamu sejenak, bayangkan impian kamu di tahun ini, lalu ketuk lilinnya.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export default function WishCakeSection({ onScrollToFinale }) {
                 onClick={onScrollToFinale}
                 className="inline-flex items-center gap-2 text-neutral-400 hover:text-pink-300 text-xs sm:text-sm font-medium tracking-wide transition-colors py-2 cursor-pointer group"
               >
-                <span>Ada satu pesan terakhir yang ingin kusampaikan...</span>
+                <span>Ada satu pesan terakhir yang ingin ane sampaikan...</span>
                 <ArrowDown className="w-3.5 h-3.5 group-hover:translate-y-1 transition-transform" />
               </button>
             </div>
