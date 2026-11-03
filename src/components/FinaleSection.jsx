@@ -161,19 +161,19 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay 
           </p>
 
           {/* Paragraph 4 */}
-          <p className="font-elegant text-lg sm:text-xl md:text-2xl text-pink-200/95 leading-relaxed font-normal">
+          <p className="font-elegant text-lg sm:text-xl md:text-2xl text-neutral-200/95 leading-relaxed font-normal">
             Dan mungkin, tanpa kamu sadari, mengenalmu sudah menjadi salah satu hal sederhana yang membuat hari-hari diri ini terasa lebih berwarna.
           </p>
 
           {/* Paragraph 5 */}
-          <p className="font-elegant text-lg sm:text-xl md:text-2xl text-neutral-300 leading-relaxed font-light italic">
+          <p className="font-elegant text-lg sm:text-xl md:text-2xl text-pink-300 leading-relaxed font-light italic">
             So, here's to another chapter of your life. I hope it will be as beautiful as the person who's living it.
           </p>
 
           {/* Final Emotional Signature */}
           <div className="pt-8 text-center space-y-3">
             <h3 className="font-script text-3xl sm:text-4xl md:text-5xl text-rose-300 tracking-wide">
-              Happy birthday, you. ♡
+              Happy birthday, Taraa. ♡
             </h3>
             <p className="text-xs text-neutral-500 uppercase tracking-widest font-mono">
               Always wishing you the very best
