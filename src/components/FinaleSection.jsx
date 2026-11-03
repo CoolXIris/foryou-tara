@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Heart, Sparkles, RotateCcw, Gift, Play, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay }) {
+export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay, hasLikedAllMemories }) {
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
   const flashTimerRef = useRef(null);
@@ -178,7 +178,7 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay 
             <p className="text-xs text-neutral-500 uppercase tracking-widest font-mono">
               Always wishing you the very best
             </p>
-            {!isGiftCompleted && (
+            {hasLikedAllMemories && !isGiftCompleted && (
               <div className="mt-7 flex flex-col items-center gap-2">
                 <button
                   type="button"
@@ -190,7 +190,7 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay 
                   <Gift className="relative z-10 h-9 w-9 drop-shadow-[0_0_12px_rgba(251,191,36,0.4)] transition-transform group-hover:scale-110" />
                   <Sparkles className="absolute -right-1 -top-1 h-4 w-4 text-amber-200" />
                 </button>
-                <span className="text-[10px] uppercase tracking-[0.28em] text-amber-100/60">Ada satu hadiah lagi</span>
+                <span className="text-[10px] uppercase tracking-[0.28em] text-amber-100/60">ketauan tuhh semua fotonya kamu like</span>
               </div>
             )}
           </div>
@@ -256,7 +256,7 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay 
               </div>
             )}
             <h2 id="video-gift-title" className={hasVideoStarted ? 'sr-only' : 'mb-3 px-3 pt-3 text-center font-serif-romantic text-xl text-white'}>
-              Dari aku, untuk kamu ♡
+              Dari ane, untuk kamu ♡
             </h2>
             <div className="video-portrait-frame relative mx-auto aspect-[9/16] max-h-[68svh] w-full overflow-hidden rounded-[1.45rem] border border-white/10 bg-[radial-gradient(ellipse_at_50%_30%,rgba(236,72,153,0.22),transparent_58%),linear-gradient(160deg,#28152a,#0c0a12_75%)]">
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center text-pink-100/70" aria-hidden="true">

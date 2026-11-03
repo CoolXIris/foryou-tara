@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Flower2, MousePointer2, Sparkles } from 'lucide-react';
 import BackgroundStars from './components/BackgroundStars';
 import AudioPlayer from './components/AudioPlayer';
@@ -15,9 +15,20 @@ export default function App() {
   const [isFinaleActive, setIsFinaleActive] = useState(false);
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isGateOpen, setIsGateOpen] = useState(false);
+  const [likedMemoryIds, setLikedMemoryIds] = useState(() => new Set());
   const gateButtonRef = useRef(null);
   const bgmRef = useRef(null);
   const hasStartedRef = useRef(false);
+  const hasLikedAllMemories = memoriesData.every((memory) => likedMemoryIds.has(memory.id));
+
+  const handleMemoryLikeChange = useCallback((memoryId, isLiked) => {
+    setLikedMemoryIds((currentIds) => {
+      const nextIds = new Set(currentIds);
+      if (isLiked) nextIds.add(memoryId);
+      else nextIds.delete(memoryId);
+      return nextIds;
+    });
+  }, []);
 
   // Intercept the first downward gesture so the welcome note appears before the story scrolls.
   useEffect(() => {
@@ -157,6 +168,7 @@ export default function App() {
             index={index}
             total={memoriesData.length}
             onActiveChange={setActiveMemoryId}
+            onLikeChange={handleMemoryLikeChange}
           />
         ))}
       </div>
@@ -168,6 +180,7 @@ export default function App() {
       <FinaleSection
         onFinaleVisible={setIsFinaleActive}
         onRestart={handleRestart}
+        hasLikedAllMemories={hasLikedAllMemories}
         onVideoPlay={() => {
           bgmRef.current?.pause();
         }}

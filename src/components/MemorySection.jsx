@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Sparkles, Quote, Award, Calendar, Compass, Feather } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function MemorySection({ memory, index, total, onActiveChange }) {
+export default function MemorySection({ memory, index, total, onActiveChange, onLikeChange }) {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -44,8 +44,10 @@ export default function MemorySection({ memory, index, total, onActiveChange }) 
   }, [memory.id, onActiveChange, hasAnimated]);
 
   const handleLikeClick = () => {
-    setLiked(!liked);
-    if (!liked) {
+    const nextLiked = !liked;
+    setLiked(nextLiked);
+    onLikeChange?.(memory.id, nextLiked);
+    if (nextLiked) {
       confetti({
         particleCount: 30,
         spread: 45,
@@ -128,7 +130,9 @@ export default function MemorySection({ memory, index, total, onActiveChange }) 
               {/* Floating like button over image */}
               <button
                 onClick={handleLikeClick}
-                aria-label="Send love"
+                type="button"
+                aria-label={liked ? 'Remove like from this memory' : 'Like this memory'}
+                aria-pressed={liked}
                 className={`absolute bottom-4 right-4 p-3 rounded-full backdrop-blur-md border transition-all duration-300 ${
                   liked
                     ? 'bg-rose-500 text-white border-rose-400 scale-110 shadow-lg shadow-rose-500/50'
