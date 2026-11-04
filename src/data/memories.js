@@ -1,6 +1,7 @@
 export const memoriesData = [
   {
     id: 1,
+    fireworkText: 'Senyuman Tulus',
     photo: './assets/photos/IMG_20261102_120011.jpg',
     tag: '#01 · Senyuman Tulus',
     title: 'Kilau Senyum yang Menghangatkan',
@@ -16,6 +17,7 @@ export const memoriesData = [
   },
   {
     id: 2,
+    fireworkText: 'Ketulusan Hati',
     photo: './assets/photos/IMG_20261102_120110.jpg',
     tag: '#02 · Ketulusan Hati',
     title: 'Hati yang Tenang & Selalu Bersahaja',
@@ -31,6 +33,7 @@ export const memoriesData = [
   },
   {
     id: 3,
+    fireworkText: 'Berani Bermimpi',
     photo: './assets/photos/IMG_20261102_120137.jpg',
     tag: '#03 · Berani Bermimpi',
     title: 'Mimpi Besar yang Sedang Dirajut',
@@ -46,6 +49,7 @@ export const memoriesData = [
   },
   {
     id: 4,
+    fireworkText: 'Ketangguhan Langkah',
     photo: './assets/photos/IMG_20261102_120150.jpg',
     tag: '#04 · Ketangguhan Langkah',
     title: 'Menatap Hari Esok yang Lebih Indah',
@@ -61,6 +65,7 @@ export const memoriesData = [
   },
   {
     id: 5,
+    fireworkText: 'Kenyamanan & Kehangatan',
     photo: './assets/photos/IMG_20261102_120209.jpg',
     tag: '#05 · Kenyamanan & Kehangatan',
     title: 'Sosok yang Selalu Membawa Kehangatan',
@@ -76,6 +81,7 @@ export const memoriesData = [
   },
   {
     id: 6,
+    fireworkText: 'Keanggunan Jiwa',
     photo: './assets/photos/IMG_20261102_120313.jpg',
     tag: '#06 · Keanggunan Jiwa',
     title: 'Tumbuh Menjadi Pribadi yang Mempesona',
@@ -91,6 +97,7 @@ export const memoriesData = [
   },
   {
     id: 7,
+    fireworkText: 'Mahakarya & Kerja Keras',
     photo: './assets/photos/IMG-20260814-WA0019.jpg',
     tag: '#07 · Mahakarya & Kerja Keras',
     title: 'Bukti Perjuangan: Dengan Pujian (Cum Laude)',
@@ -106,6 +113,7 @@ export const memoriesData = [
   },
   {
     id: 8,
+    fireworkText: 'Pondasi Cinta & Doa',
     photo: './assets/photos/IMG_20261102_120343.jpg',
     tag: '#08 · Pondasi Cinta & Doa',
     title: 'Cinta Tulus yang Selalu Mengiringi',

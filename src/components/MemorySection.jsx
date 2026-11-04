@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Sparkles, Quote, Award, Calendar, Compass, Feather } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-export default function MemorySection({ memory, index, total, onActiveChange, onLikeChange }) {
+export default function MemorySection({ memory, index, total, onActiveChange, onLikeChange, onSectionEnter }) {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasCelebratedGraduationRef = useRef(false);
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
@@ -16,11 +16,12 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
-          setHasAnimated(true);
           if (onActiveChange) onActiveChange(memory.id);
+          onSectionEnter?.(memory.fireworkText);
 
           // If this is the graduation section (#7), trigger small golden celebratory confetti once!
-          if (memory.id === 7 && !hasAnimated) {
+          if (memory.id === 7 && !hasCelebratedGraduationRef.current) {
+            hasCelebratedGraduationRef.current = true;
             confetti({
               particleCount: 50,
               spread: 60,
@@ -41,7 +42,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [memory.id, onActiveChange, hasAnimated]);
+  }, [memory.id, memory.fireworkText, onActiveChange, onSectionEnter]);
 
   const handleLikeClick = () => {
     const nextLiked = !liked;

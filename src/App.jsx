@@ -8,6 +8,7 @@ import WishCakeSection from './components/WishCakeSection';
 import FinaleSection from './components/FinaleSection';
 import NavigationDots from './components/NavigationDots';
 import CursorEffects from './components/CursorEffects';
+import SectionFireworks from './components/SectionFireworks';
 import { memoriesData } from './data/memories';
 
 export default function App() {
@@ -16,6 +17,8 @@ export default function App() {
   const [hasUserInteracted, setHasUserInteracted] = useState(false);
   const [isGateOpen, setIsGateOpen] = useState(false);
   const [likedMemoryIds, setLikedMemoryIds] = useState(() => new Set());
+  const [sectionTransition, setSectionTransition] = useState(null);
+  const transitionIdRef = useRef(0);
   const gateButtonRef = useRef(null);
   const bgmRef = useRef(null);
   const hasStartedRef = useRef(false);
@@ -28,6 +31,11 @@ export default function App() {
       else nextIds.delete(memoryId);
       return nextIds;
     });
+  }, []);
+
+  const handleSectionEnter = useCallback((text) => {
+    transitionIdRef.current += 1;
+    setSectionTransition({ id: transitionIdRef.current, text });
   }, []);
 
   // Intercept the first downward gesture so the welcome note appears before the story scrolls.
@@ -143,6 +151,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen overflow-x-hidden bg-[#0a0812] text-neutral-100 selection:bg-pink-500 selection:text-white">
       <BackgroundStars isFinaleMode={isFinaleActive} />
+      <SectionFireworks transition={sectionTransition} />
       <CursorEffects active={hasUserInteracted} />
 
       <AudioPlayer
@@ -169,6 +178,7 @@ export default function App() {
             total={memoriesData.length}
             onActiveChange={setActiveMemoryId}
             onLikeChange={handleMemoryLikeChange}
+            onSectionEnter={handleSectionEnter}
           />
         ))}
       </div>

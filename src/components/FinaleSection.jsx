@@ -256,7 +256,7 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
               </div>
             )}
             <h2 id="video-gift-title" className={hasVideoStarted ? 'sr-only' : 'mb-3 px-3 pt-3 text-center font-serif-romantic text-xl text-white'}>
-              Dari ane, untuk kamu ♡
+              Pake acara ketauan pulaa, jangan diliat pliss...
             </h2>
             <div className="video-portrait-frame relative mx-auto aspect-[9/16] max-h-[68svh] w-full overflow-hidden rounded-[1.45rem] border border-white/10 bg-[radial-gradient(ellipse_at_50%_30%,rgba(236,72,153,0.22),transparent_58%),linear-gradient(160deg,#28152a,#0c0a12_75%)]">
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center text-pink-100/70" aria-hidden="true">
