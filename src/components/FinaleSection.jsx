@@ -68,6 +68,11 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
     setIsGiftDialogOpen(false);
     setIsGiftCompleted(true);
     setHasVideoStarted(false);
+    setIsFlashActive(true);
+    window.clearTimeout(flashTimerRef.current);
+    flashTimerRef.current = window.setTimeout(() => {
+      window.location.assign('https://coolxiris.github.io/portfolio-tari-ramadila/');
+    }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 100 : 820);
   };
 
   useEffect(() => {

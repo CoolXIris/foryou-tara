@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 
-const PALETTE = ['#fff7ed', '#fbcfe8', '#f9a8d4', '#fcd34d', '#c4b5fd', '#ffffff'];
-const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+const COLORS = ['#fff7ed', '#fbcfe8', '#f9a8d4', '#fcd34d', '#c4b5fd'];
+const clamp = (value) => Math.min(1, Math.max(0, value));
 const easeOut = (value) => 1 - (1 - value) ** 3;
 
-function createTextParticles(text, width, height) {
+function sampleText(text, width, height) {
   const mask = document.createElement('canvas');
   const maskContext = mask.getContext('2d', { willReadFrequently: true });
   if (!maskContext) return [];
 
-  mask.width = Math.max(1, Math.floor(width * 0.9));
-  mask.height = 180;
-  let fontSize = Math.min(76, Math.max(27, width * 0.095));
+  mask.width = Math.max(1, Math.floor(width * 0.94));
+  mask.height = height;
+  let fontSize = Math.min(74, Math.max(24, width * 0.095));
+  const maxTextWidth = mask.width * 0.96;
   maskContext.textAlign = 'center';
   maskContext.textBaseline = 'middle';
   maskContext.font = `600 ${fontSize}px "Cormorant Garamond", Georgia, serif`;
+
   const measuredWidth = maskContext.measureText(text).width;
-  const maxTextWidth = mask.width * 0.94;
   if (measuredWidth > maxTextWidth) {
     fontSize *= maxTextWidth / measuredWidth;
     maskContext.font = `600 ${fontSize}px "Cormorant Garamond", Georgia, serif`;
@@ -25,8 +26,7 @@ function createTextParticles(text, width, height) {
   maskContext.fillStyle = '#fff';
   maskContext.fillText(text, mask.width / 2, mask.height / 2, maxTextWidth);
   const pixels = maskContext.getImageData(0, 0, mask.width, mask.height).data;
-  const step = width < 520 ? 3 : 4;
-  const textCenterY = Math.min(120, Math.max(76, height * 0.115));
+  const step = width < 600 ? 6 : 11;
   const points = [];
 
   for (let y = 0; y < mask.height; y += step) {
@@ -34,7 +34,9 @@ function createTextParticles(text, width, height) {
       if (pixels[(y * mask.width + x) * 4 + 3] > 110) {
         points.push({
           x: (width - mask.width) / 2 + x,
-          y: textCenterY - mask.height / 2 + y,
+          y,
+          color: Math.floor(Math.random() * COLORS.length),
+          radius: 1.15 + Math.random() * 0.75,
         });
       }
     }
@@ -43,56 +45,60 @@ function createTextParticles(text, width, height) {
   return points;
 }
 
-export default function SectionFireworks({ transition }) {
+export default function SectionFireworks({ text, triggerId }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d');
-    if (!canvas || !context || !transition?.text) return undefined;
+    if (!canvas || !context || !text || triggerId === 0) return undefined;
 
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    if (!width || !height) return undefined;
+
     const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.floor(width * pixelRatio);
-    canvas.height = Math.floor(height * pixelRatio);
+    canvas.width = Math.round(width * pixelRatio);
+    canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     canvas.style.opacity = '1';
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const textCenterY = Math.min(120, Math.max(76, height * 0.115));
+    const fireworkStart = reducedMotion ? 340 : 580;
+    const explosionDuration = reducedMotion ? 220 : 340;
+    const formationDelay = reducedMotion ? 180 : 260;
+    const formationDuration = reducedMotion ? 440 : 760;
+    const lifetime = reducedMotion ? 1600 : 2700;
     const startTime = performance.now();
-    const lifetime = reducedMotion ? 3600 : 5300;
-    const particles = createTextParticles(transition.text, width, height).map((point) => {
-      const relativeX = clamp(point.x / width);
-      const burstIndex = Math.min(2, Math.floor(relativeX * 3));
+    const particles = sampleText(text, width, height).map((point) => {
+      const burstIndex = Math.min(2, Math.floor((point.x / width) * 3));
       const originX = width * (0.25 + burstIndex * 0.25);
-      const originY = height * 0.3;
+      const originY = height * 0.52;
       const angle = Math.random() * Math.PI * 2;
-      const radius = 65 + Math.random() * Math.min(125, width * 0.2);
+      const distance = 24 + Math.random() * Math.min(64, width * 0.12);
 
       return {
         ...point,
-        color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
-        size: 0.8 + Math.random() * 1.5,
-        scatterX: originX + Math.cos(angle) * radius,
-        scatterY: originY + Math.sin(angle) * radius,
-        twinkle: Math.random() * Math.PI * 2,
+        x: point.x,
+        y: point.y,
+        scatterX: originX + Math.cos(angle) * distance,
+        scatterY: originY + Math.sin(angle) * distance,
       };
     });
+    const particleGroups = COLORS.map((_, colorIndex) => particles.filter((particle) => particle.color === colorIndex));
 
-    const shootingStars = Array.from({ length: 4 }, (_, index) => {
-      const startX = width * (0.06 + Math.random() * 0.55);
-      const startY = height * (0.08 + Math.random() * 0.28);
-      const distance = width * (0.22 + Math.random() * 0.24);
+    const shootingStars = Array.from({ length: 3 }, (_, index) => {
+      const startX = width * (0.08 + Math.random() * 0.5);
+      const startY = height * (0.12 + Math.random() * 0.3);
+      const distance = width * (0.18 + Math.random() * 0.2);
       return {
-        delay: index * 180,
-        duration: 620 + Math.random() * 240,
+        delay: index * 130,
+        duration: reducedMotion ? 290 : 470,
         startX,
         startY,
         endX: startX + distance,
-        endY: startY + distance * (0.35 + Math.random() * 0.3),
-        length: 90 + Math.random() * 80,
+        endY: Math.min(height - 4, startY + distance * 0.24),
+        length: Math.min(85, width * 0.22),
       };
     });
 
@@ -113,57 +119,54 @@ export default function SectionFireworks({ transition }) {
         const tailY = y - Math.sin(angle) * star.length;
         const gradient = context.createLinearGradient(x, y, tailX, tailY);
         gradient.addColorStop(0, `rgba(255,255,255,${opacity})`);
-        gradient.addColorStop(0.45, `rgba(251,207,232,${opacity * 0.65})`);
+        gradient.addColorStop(0.5, `rgba(251,207,232,${opacity * 0.55})`);
         gradient.addColorStop(1, 'rgba(255,255,255,0)');
-
-        context.save();
         context.strokeStyle = gradient;
-        context.lineWidth = 2;
-        context.shadowBlur = 12;
-        context.shadowColor = '#fbcfe8';
+        context.lineWidth = 1.5;
         context.beginPath();
         context.moveTo(x, y);
         context.lineTo(tailX, tailY);
         context.stroke();
-        context.restore();
       });
 
-      if (elapsed > 850) {
-        const fireworkElapsed = elapsed - 850;
-        const explosionProgress = easeOut(clamp(fireworkElapsed / 520));
-        const formProgress = easeOut(clamp((fireworkElapsed - 480) / 900));
-        const fade = 1 - easeOut(clamp((elapsed - lifetime + 850) / 850));
+      if (elapsed >= fireworkStart) {
+        const fireworkElapsed = elapsed - fireworkStart;
+        const explosion = easeOut(clamp(fireworkElapsed / explosionDuration));
+        const form = easeOut(clamp((fireworkElapsed - formationDelay) / formationDuration));
+        const fade = 1 - easeOut(clamp((elapsed - lifetime + 430) / 430));
 
-        for (let burstIndex = 0; burstIndex < 3; burstIndex += 1) {
-          const burstX = width * (0.25 + burstIndex * 0.25);
-          const burstY = textCenterY;
-          const bloomRadius = 12 + explosionProgress * (42 + burstIndex * 7);
-          const bloom = context.createRadialGradient(burstX, burstY, 0, burstX, burstY, bloomRadius);
-          bloom.addColorStop(0, `rgba(255,255,255,${(1 - explosionProgress) * 0.62 * fade})`);
-          bloom.addColorStop(0.18, `rgba(249,168,212,${(1 - explosionProgress) * 0.24 * fade})`);
-          bloom.addColorStop(1, 'rgba(249,168,212,0)');
-          context.fillStyle = bloom;
-          context.beginPath();
-          context.arc(burstX, burstY, bloomRadius, 0, Math.PI * 2);
-          context.fill();
+        if (fireworkElapsed < explosionDuration) {
+          for (let burstIndex = 0; burstIndex < 3; burstIndex += 1) {
+            const burstX = width * (0.25 + burstIndex * 0.25);
+            const burstY = height * 0.52;
+            const radius = 10 + explosion * 32;
+            const glow = context.createRadialGradient(burstX, burstY, 0, burstX, burstY, radius);
+            glow.addColorStop(0, `rgba(255,255,255,${(1 - explosion) * 0.45 * fade})`);
+            glow.addColorStop(0.3, `rgba(249,168,212,${(1 - explosion) * 0.2 * fade})`);
+            glow.addColorStop(1, 'rgba(249,168,212,0)');
+            context.fillStyle = glow;
+            context.beginPath();
+            context.arc(burstX, burstY, radius, 0, Math.PI * 2);
+            context.fill();
+          }
         }
 
-        particles.forEach((particle) => {
-          const x = particle.scatterX + (particle.x - particle.scatterX) * formProgress;
-          const y = particle.scatterY + (particle.y - particle.scatterY) * formProgress;
-          const twinkle = 0.68 + Math.sin(elapsed * 0.009 + particle.twinkle) * 0.24;
-          const alpha = clamp((fireworkElapsed + 80) / 260) * fade * twinkle;
-
-          context.save();
-          context.globalAlpha = alpha;
-          context.fillStyle = particle.color;
-          context.shadowBlur = formProgress > 0.72 ? 10 : 7;
-          context.shadowColor = particle.color;
+        for (let colorIndex = 0; colorIndex < COLORS.length; colorIndex += 1) {
+          const groupOpacity = (0.78 + Math.sin(elapsed * 0.008 + colorIndex) * 0.12) * fade;
+          context.globalAlpha = groupOpacity;
+          context.fillStyle = COLORS[colorIndex];
           context.beginPath();
-          context.arc(x, y, particle.size, 0, Math.PI * 2);
+
+          particleGroups[colorIndex].forEach((particle) => {
+            const x = particle.scatterX + (particle.x - particle.scatterX) * form;
+            const y = particle.scatterY + (particle.y - particle.scatterY) * form;
+            context.moveTo(x + particle.radius, y);
+            context.arc(x, y, particle.radius, 0, Math.PI * 2);
+          });
+
           context.fill();
-          context.restore();
-        });
+        }
+        context.globalAlpha = 1;
       }
 
       if (elapsed < lifetime) {
@@ -177,16 +180,16 @@ export default function SectionFireworks({ transition }) {
     frameId = requestAnimationFrame(render);
     return () => {
       cancelAnimationFrame(frameId);
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, width, height);
       canvas.style.opacity = '0';
     };
-  }, [transition?.id, transition?.text]);
+  }, [text, triggerId]);
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="fixed inset-0 z-[1] pointer-events-none opacity-0 transition-opacity duration-500"
+      className="pointer-events-none absolute left-0 top-0 z-[5] h-[176px] w-full opacity-0 transition-opacity duration-300"
     />
   );
 }

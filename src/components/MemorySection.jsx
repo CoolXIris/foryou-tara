@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Heart, Sparkles, Quote, Award, Calendar, Compass, Feather } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import SectionFireworks from './SectionFireworks';
 
-export default function MemorySection({ memory, index, total, onActiveChange, onLikeChange, onSectionEnter }) {
+export default function MemorySection({ memory, index, total, onActiveChange, onLikeChange }) {
   const sectionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [fireworkRunId, setFireworkRunId] = useState(0);
   const hasCelebratedGraduationRef = useRef(false);
   const [liked, setLiked] = useState(false);
 
@@ -17,7 +19,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
         if (entry.isIntersecting) {
           setIsVisible(true);
           if (onActiveChange) onActiveChange(memory.id);
-          onSectionEnter?.(memory.fireworkText);
+          setFireworkRunId((runId) => runId + 1);
 
           // If this is the graduation section (#7), trigger small golden celebratory confetti once!
           if (memory.id === 7 && !hasCelebratedGraduationRef.current) {
@@ -42,7 +44,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
     observer.observe(el);
 
     return () => observer.disconnect();
-  }, [memory.id, memory.fireworkText, onActiveChange, onSectionEnter]);
+  }, [memory.id, onActiveChange]);
 
   const handleLikeClick = () => {
     const nextLiked = !liked;
@@ -65,8 +67,10 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
     <section
       ref={sectionRef}
       id={`memory-${memory.id}`}
-      className="relative min-h-[100svh] w-full flex items-center justify-center py-20 px-4 sm:px-8 md:px-12 overflow-hidden transition-all duration-1000"
+      className="relative min-h-[100svh] w-full flex items-center justify-center pt-52 pb-20 px-4 sm:pt-48 sm:px-8 md:px-12 overflow-hidden transition-all duration-1000"
     >
+      <SectionFireworks text={memory.fireworkText} triggerId={fireworkRunId} />
+
       {/* Dynamic ambient color glow for this specific memory */}
       <div
         className={`absolute inset-0 bg-gradient-to-b ${memory.themeColor} pointer-events-none transition-opacity duration-1000 ${
