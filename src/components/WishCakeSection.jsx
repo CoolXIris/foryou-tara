@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Sparkles, Heart, Flame, ArrowDown } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+const RIBBON_COLORS = ['#f9a8d4', '#fcd34d', '#c4b5fd', '#fb7185', '#67e8f9'];
+
 export default function WishCakeSection({ onScrollToFinale }) {
   const [candlesBlown, setCandlesBlown] = useState(false);
+  const [ribbonsActive, setRibbonsActive] = useState(false);
+  const ribbonsTimerRef = useRef(null);
+
+  useEffect(() => () => window.clearTimeout(ribbonsTimerRef.current), []);
 
   const handleBlowCandles = () => {
     setCandlesBlown(true);
+    setRibbonsActive(true);
+    window.clearTimeout(ribbonsTimerRef.current);
+    ribbonsTimerRef.current = window.setTimeout(() => setRibbonsActive(false), 4000);
 
     // Celebration fireworks
     const duration = 2.5 * 1000;
@@ -126,6 +135,25 @@ export default function WishCakeSection({ onScrollToFinale }) {
           )}
         </div>
       </div>
+
+      {ribbonsActive && (
+        <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden="true">
+          {Array.from({ length: 24 }, (_, index) => (
+            <span
+              key={index}
+              className="wish-ribbon"
+              style={{
+                left: `${(index * 41) % 100}%`,
+                '--ribbon-color': RIBBON_COLORS[index % RIBBON_COLORS.length],
+                '--ribbon-height': `${92 + ((index * 23) % 78)}px`,
+                '--ribbon-duration': `${2.2 + (index % 5) * 0.22}s`,
+                '--ribbon-delay': `${(index % 8) * 55}ms`,
+                '--ribbon-sway': `${index % 2 ? '' : '-'}${24 + ((index * 17) % 62)}px`,
+              }}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

@@ -122,6 +122,66 @@
   animation: gift-idle 2.4s ease-in-out infinite;
 }
 
+.memory-photo-float {
+  transform-origin: 50% 45%;
+  animation: memory-photo-float 5.4s ease-in-out var(--photo-float-delay, 0s) infinite;
+}
+
+.memory-photo-shake {
+  animation: memory-photo-shake 720ms cubic-bezier(0.25, 0.7, 0.35, 1) both;
+}
+
+.wish-ribbon {
+  position: absolute;
+  top: -14%;
+  display: block;
+  width: 10px;
+  height: var(--ribbon-height, 120px);
+  border-radius: 2px 8px 2px 8px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.28), var(--ribbon-color), rgba(255, 255, 255, 0.42));
+  opacity: 0;
+  animation: wish-ribbon-fall var(--ribbon-duration, 2.8s) cubic-bezier(0.2, 0.7, 0.3, 1) var(--ribbon-delay, 0ms) both;
+}
+
+.finale-aurora-frame {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  border-radius: 2rem;
+}
+
+.finale-aurora-frame::before {
+  position: absolute;
+  z-index: 0;
+  inset: -8px;
+  border-radius: inherit;
+  background: conic-gradient(from 25deg, #34d399, #22d3ee, #818cf8, #e879f9, #f9a8d4, #fcd34d, #34d399);
+  content: '';
+  filter: blur(16px);
+  opacity: 0.42;
+  pointer-events: none;
+  animation: aurora-frame-rotate 16s linear infinite;
+}
+
+.finale-aurora-surface {
+  position: relative;
+  z-index: 1;
+  padding: 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 1.85rem;
+  background:
+    linear-gradient(145deg, rgba(5, 3, 8, 0.97), rgba(10, 7, 17, 0.94)) padding-box,
+    conic-gradient(from 25deg, #34d399, #22d3ee, #818cf8, #e879f9, #f9a8d4, #fcd34d, #34d399) border-box;
+  background-size: 100% 100%, 220% 220%;
+  animation: aurora-border-flow 12s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .finale-aurora-surface {
+    padding: 2rem;
+  }
+}
+
 .gift-box-lid {
   position: absolute;
   top: 16px;
@@ -186,6 +246,37 @@
   50% { transform: translateY(-7px) rotate(2deg); }
 }
 
+@keyframes memory-photo-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.45deg); }
+  50% { transform: translate3d(0, -8px, 0) rotate(0.55deg); }
+}
+
+@keyframes memory-photo-shake {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0); }
+  14% { transform: translate3d(-6px, 1px, 0) rotate(-1.7deg); }
+  30% { transform: translate3d(5px, -1px, 0) rotate(1.3deg); }
+  48% { transform: translate3d(-4px, 0, 0) rotate(-1deg); }
+  68% { transform: translate3d(3px, 0, 0) rotate(0.7deg); }
+  84% { transform: translate3d(-1px, 0, 0) rotate(-0.25deg); }
+}
+
+@keyframes wish-ribbon-fall {
+  0% { opacity: 0; transform: translate3d(0, -12vh, 0) rotate(0deg) scale(0.8); }
+  12% { opacity: 0.95; }
+  55% { opacity: 0.9; transform: translate3d(var(--ribbon-sway, 48px), 52vh, 0) rotate(250deg) scale(1); }
+  100% { opacity: 0; transform: translate3d(0, 105vh, 0) rotate(560deg) scale(0.88); }
+}
+
+@keyframes aurora-frame-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes aurora-border-flow {
+  0%, 100% { background-position: 0 0, 0% 50%; }
+  50% { background-position: 0 0, 100% 50%; }
+}
+
 @keyframes birthday-flash {
   0% { opacity: 0; }
   20% { opacity: 1; }
@@ -216,6 +307,11 @@
   .cursor-guide,
   .cursor-trail-particle,
   .gift-box-button,
+  .memory-photo-float,
+  .memory-photo-shake,
+  .wish-ribbon,
+  .finale-aurora-frame::before,
+  .finale-aurora-surface,
   .birthday-flash,
   .video-gift-overlay,
   .video-gift-card {

@@ -41,11 +41,15 @@ export default function BackgroundStars({ isFinaleMode }) {
       opacity: Math.random() * 0.5 + 0.1,
     }));
 
-    // Occasional shooting star
+    // Let occasional shooting stars travel at a consistent speed across displays.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let shootingStar = null;
-    let nextShootingStarTime = Date.now() + 3000 + Math.random() * 4000;
+    let previousFrameTime = 0;
+    let nextShootingStarTime = performance.now() + 2800 + Math.random() * 4200;
 
-    const render = () => {
+    const render = (now) => {
+      const frameScale = previousFrameTime ? Math.min((now - previousFrameTime) / (1000 / 60), 2) : 1;
+      previousFrameTime = now;
       ctx.clearRect(0, 0, width, height);
 
       // Render stars
@@ -87,24 +91,23 @@ export default function BackgroundStars({ isFinaleMode }) {
       });
 
       // Handle shooting star
-      const now = Date.now();
-      if (!shootingStar && now > nextShootingStarTime) {
+      if (!prefersReducedMotion && !shootingStar && now > nextShootingStarTime) {
         shootingStar = {
-          x: Math.random() * width * 0.7,
-          y: Math.random() * (height * 0.3),
-          len: Math.random() * 80 + 70,
-          speed: Math.random() * 8 + 6,
+          x: Math.random() * width * 0.65,
+          y: Math.random() * (height * 0.55),
+          len: Math.random() * 90 + 100,
+          speed: Math.random() * 4 + 7,
           angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2,
           opacity: 1,
         };
       }
 
       if (shootingStar) {
-        const dx = Math.cos(shootingStar.angle) * shootingStar.speed;
-        const dy = Math.sin(shootingStar.angle) * shootingStar.speed;
+        const dx = Math.cos(shootingStar.angle) * shootingStar.speed * frameScale;
+        const dy = Math.sin(shootingStar.angle) * shootingStar.speed * frameScale;
         shootingStar.x += dx;
         shootingStar.y += dy;
-        shootingStar.opacity -= 0.015;
+        shootingStar.opacity -= 0.012 * frameScale;
 
         ctx.save();
         const grad = ctx.createLinearGradient(
@@ -118,7 +121,7 @@ export default function BackgroundStars({ isFinaleMode }) {
         grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
         ctx.strokeStyle = grad;
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(shootingStar.x, shootingStar.y);
         ctx.lineTo(
@@ -126,18 +129,25 @@ export default function BackgroundStars({ isFinaleMode }) {
           shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.len
         );
         ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(shootingStar.x, shootingStar.y, 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${shootingStar.opacity})`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = '#fbcfe8';
+        ctx.fill();
         ctx.restore();
 
         if (shootingStar.opacity <= 0) {
           shootingStar = null;
-          nextShootingStarTime = now + 4000 + Math.random() * 6000;
+          nextShootingStarTime = now + 4200 + Math.random() * 5200;
         }
       }
 
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(animationFrameId);

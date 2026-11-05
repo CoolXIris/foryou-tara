@@ -9,6 +9,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
   const [fireworkRunId, setFireworkRunId] = useState(0);
   const hasCelebratedGraduationRef = useRef(false);
   const [liked, setLiked] = useState(false);
+  const [isPhotoShaking, setIsPhotoShaking] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -49,6 +50,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
   const handleLikeClick = () => {
     const nextLiked = !liked;
     setLiked(nextLiked);
+    setIsPhotoShaking(nextLiked);
     onLikeChange?.(memory.id, nextLiked);
     if (nextLiked) {
       confetti({
@@ -104,7 +106,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
           }`}
         >
           <div
-            className={`group relative p-3 sm:p-4 rounded-3xl bg-neutral-900/60 border ${memory.accentBorder} backdrop-blur-xl shadow-2xl transition-all duration-700 hover:shadow-pink-500/20 transform ${
+            className={`transform transition-all duration-700 ${
               isVisible
                 ? isEven
                   ? 'translate-x-0 rotate-1'
@@ -114,6 +116,15 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
                 : '-translate-x-12 -rotate-6'
             }`}
           >
+            <div
+              className={isVisible ? 'memory-photo-float' : ''}
+              style={{ '--photo-float-delay': `${index * -0.42}s` }}
+            >
+              <div
+                className={`group relative p-3 sm:p-4 rounded-3xl bg-neutral-900/60 border ${memory.accentBorder} backdrop-blur-xl shadow-2xl transition-shadow duration-700 hover:shadow-pink-500/20 ${
+                  isPhotoShaking ? 'memory-photo-shake' : ''
+                }`}
+              >
             {/* Top decorative pin or washi tape */}
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-[10px] uppercase tracking-widest text-neutral-300 flex items-center gap-1 shadow-md">
               <Sparkles className="w-3 h-3 text-amber-300" />
@@ -161,6 +172,8 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
               <span className="text-neutral-400 flex items-center gap-1">
                 <Feather className="w-3 h-3 text-pink-400" /> {index + 1} / {total}
               </span>
+            </div>
+              </div>
             </div>
           </div>
         </div>

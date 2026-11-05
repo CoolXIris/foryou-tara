@@ -144,12 +144,13 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
 
         {/* Stage 2: The Heartfelt Letter */}
         <div
-          className={`space-y-7 transition-all duration-1000 delay-300 max-w-2xl text-left ${
+          className={`transition-all duration-1000 delay-300 max-w-2xl text-left ${
             stage >= 2
-              ? 'opacity-100 translate-y-0'
+              ? 'finale-aurora-frame opacity-100 translate-y-0'
               : 'opacity-0 translate-y-10 pointer-events-none'
           }`}
         >
+          <div className={stage >= 2 ? 'finale-aurora-surface space-y-7' : 'space-y-7'}>
           {/* Paragraph 1 */}
           <p className="font-elegant text-lg sm:text-xl md:text-2xl text-neutral-200 leading-relaxed font-light">
             Di antara banyak hal baik yang ane harapkan datang ke hidupmu, ada satu hal yang mungkin belum pernah ane sampaikan.
@@ -224,6 +225,7 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
               <RotateCcw className="w-4 h-4 text-neutral-400" />
               <span>Putar Kembali Cerita ↺</span>
             </button>
+          </div>
           </div>
         </div>
       </div>
