@@ -69,7 +69,7 @@ export default function MemorySection({ memory, index, total, onActiveChange, on
       id={`memory-${memory.id}`}
       className="relative min-h-[100svh] w-full flex items-center justify-center pt-52 pb-20 px-4 sm:pt-48 sm:px-8 md:px-12 overflow-hidden transition-all duration-1000"
     >
-      <SectionFireworks text={memory.fireworkText} triggerId={fireworkRunId} />
+      <SectionFireworks text={memory.fireworkText} triggerId={fireworkRunId} isActive={isVisible} />
 
       {/* Dynamic ambient color glow for this specific memory */}
       <div
