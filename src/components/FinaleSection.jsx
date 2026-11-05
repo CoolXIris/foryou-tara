@@ -124,8 +124,12 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
       className="relative min-h-[110svh] w-full flex flex-col items-center justify-center px-5 sm:px-8 py-28 bg-[#050308] text-white overflow-hidden transition-colors duration-1000"
     >
       {/* Deep velvet night backdrop with subtle cosmic nebula */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#0b0714]/80 to-[#050308] pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-transparent via-[#0b0714]/80 to-[#050308] pointer-events-none" />
       <div className="absolute w-[500px] h-[500px] rounded-full bg-purple-950/20 blur-[140px] pointer-events-none" />
+      <div className="finale-aurora-sky" aria-hidden="true">
+        <div className="finale-aurora-curtain finale-aurora-curtain-left" />
+        <div className="finale-aurora-curtain finale-aurora-curtain-right" />
+      </div>
 
       <div className="relative z-10 max-w-3xl w-full mx-auto flex flex-col items-center text-center">
         {/* Stage 1: The subtle teaser sentence */}
@@ -144,13 +148,12 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
 
         {/* Stage 2: The Heartfelt Letter */}
         <div
-          className={`transition-all duration-1000 delay-300 max-w-2xl text-left ${
+          className={`space-y-7 transition-all duration-1000 delay-300 max-w-2xl text-left ${
             stage >= 2
-              ? 'finale-aurora-frame opacity-100 translate-y-0'
+              ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-10 pointer-events-none'
           }`}
         >
-          <div className={stage >= 2 ? 'finale-aurora-surface space-y-7' : 'space-y-7'}>
           {/* Paragraph 1 */}
           <p className="font-elegant text-lg sm:text-xl md:text-2xl text-neutral-200 leading-relaxed font-light">
             Di antara banyak hal baik yang ane harapkan datang ke hidupmu, ada satu hal yang mungkin belum pernah ane sampaikan.
@@ -225,7 +228,6 @@ export default function FinaleSection({ onFinaleVisible, onRestart, onVideoPlay,
               <RotateCcw className="w-4 h-4 text-neutral-400" />
               <span>Putar Kembali Cerita ↺</span>
             </button>
-          </div>
           </div>
         </div>
       </div>

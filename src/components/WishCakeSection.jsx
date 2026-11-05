@@ -18,9 +18,9 @@ export default function WishCakeSection({ onScrollToFinale }) {
     ribbonsTimerRef.current = window.setTimeout(() => setRibbonsActive(false), 4000);
 
     // Celebration fireworks
-    const duration = 2.5 * 1000;
+    const duration = 1.8 * 1000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+    const defaults = { startVelocity: 21, spread: 360, ticks: 48, zIndex: 100, scalar: 0.78 };
 
     const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
@@ -29,7 +29,7 @@ export default function WishCakeSection({ onScrollToFinale }) {
       if (timeLeft <= 0) {
         return clearInterval(interval);
       }
-      const particleCount = 50 * (timeLeft / duration);
+      const particleCount = 22 * (timeLeft / duration);
       confetti({
         ...defaults,
         particleCount,
@@ -138,17 +138,17 @@ export default function WishCakeSection({ onScrollToFinale }) {
 
       {ribbonsActive && (
         <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden="true">
-          {Array.from({ length: 24 }, (_, index) => (
+          {Array.from({ length: 18 }, (_, index) => (
             <span
               key={index}
               className="wish-ribbon"
               style={{
                 left: `${(index * 41) % 100}%`,
                 '--ribbon-color': RIBBON_COLORS[index % RIBBON_COLORS.length],
-                '--ribbon-height': `${92 + ((index * 23) % 78)}px`,
-                '--ribbon-duration': `${2.2 + (index % 5) * 0.22}s`,
-                '--ribbon-delay': `${(index % 8) * 55}ms`,
-                '--ribbon-sway': `${index % 2 ? '' : '-'}${24 + ((index * 17) % 62)}px`,
+                '--ribbon-height': `${16 + ((index * 5) % 19)}px`,
+                '--ribbon-duration': `${2 + (index % 5) * 0.16}s`,
+                '--ribbon-delay': `${(index % 8) * 45}ms`,
+                '--ribbon-sway': `${index % 2 ? '' : '-'}${10 + ((index * 7) % 20)}px`,
               }}
             />
           ))}
